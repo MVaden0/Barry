@@ -7,15 +7,13 @@ import solcx
 
 solcx.install_solc(version='latest')
 
-class Contract:
+class ContractInterface:
     def __init__(self, project_id, private_key, path, network) -> None:
         self.private_key = private_key
         self.path = path
 
-        # infura url endpoint
         self.url = f"https://{network}.infura.io/v3/{project_id}"
 
-        # web3 instance
         self.w3 = web3.Web3(web3.Web3.HTTPProvider(self.url))
 
         # contract source code
@@ -30,18 +28,16 @@ class Contract:
         )
         self.contract_id, self.contract_interface = self.compiled_contract.popitem()
 
-        # get bytecode and abi
         self.bytecode = self.contract_interface['bin']
         self.abi = self.contract_interface['abi']
 
         # contract object
-        self.contract = self.compile()
+        self.contract, self.contract_address = self.compile()
 
     def compile(self):
-        # contract instance
+        # raw contract
         contract = self.w3.eth.contract(abi=self.abi, bytecode=self.bytecode)
 
-        # account
         account = self.w3.eth.account.privateKeyToAccount(self.private_key)
 
         # raw transaction
@@ -54,18 +50,24 @@ class Contract:
         # signed transaction
         signed_txn = account.signTransaction(raw_txn)
 
-        # send transaction and get transaction hash
         txn_hash = self.w3.eth.sendRawTransaction(signed_txn.rawTransaction)
 
-        # get transaction receipt
         txn_receipt = self.w3.eth.wait_for_transaction_receipt(txn_hash)
 
-        # set contract object
-        contract = self.w3.eth.contract(address=txn_receipt.contractAddress, abi=self.abi)
+        # built contract
+        contract_address = txn_receipt.contractAddress
+        contract = self.w3.eth.contract(address=contract_address, abi=self.abi)
 
-        return contract
+        return contract, contract_address
 
 
-c = Contract(os.environ.get("PROJECT_ID"), os.environ.get("PRIVATE_KEY"), "Demo.sol", "kovan")
+c = ContractInterface(
+        os.environ.get("PROJECT_ID"), 
+        os.environ.get("PRIVATE_KEY"), 
+        "Demo.sol", 
+        "kovan"
+    )
+
+
 print(c.contract.functions.greet().call())
-    
+print(c.contract_address)
