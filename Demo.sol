@@ -1,9 +1,17 @@
-pragma solidity >=0.5.8;
+pragma solidity >0.5.0;
 
-contract Demo {
-    event Echo(string message);
+contract Greeter {
+    string public greeting;
 
-    function echo(string calldata message) external {
-        emit Echo(message);
+    constructor() public {
+        greeting = 'Hello';
+    }
+
+    function setGreeting(string memory _greeting) public {
+        greeting = _greeting;
+    }
+
+    function greet() view public returns (string memory) {
+        return greeting;
     }
 }
