@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.6.6 <0.9.0;
 
-import "./FlashLoanReceiverBaseV2.sol";
-import "./ILendingPoolAddressesProviderV2.sol";
-import "./ILendingPoolV2.sol";
+import "contracts/FlashLoanReceiverBaseV2.sol";
+import "contracts/ILendingPoolAddressesProviderV2.sol";
+import "contracts/ILendingPoolV2.sol";
+import { SafeMath } from 'node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol';
 
 contract FlashloanV2 is FlashLoanReceiverBaseV2, Withdrawable {
+    using SafeMath for uint256;
 
     constructor(address _addressProvider) FlashLoanReceiverBaseV2(_addressProvider) public {}
 

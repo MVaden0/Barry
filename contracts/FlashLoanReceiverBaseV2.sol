@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: agpl-3.0
 pragma solidity >=0.6.6 <0.9.0;
 
-import { SafeMath } from '@openzeppelin/contracts/utils/math/SafeMath.sol';
-import { IERC20 } from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
-import { SafeERC20 } from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
+import { SafeMath } from './../node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol';
+import { IERC20 } from './../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import { SafeERC20 } from './../node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import { IFlashLoanReceiverV2 } from './IFlashLoanReceiverV2.sol';
 import { ILendingPoolAddressesProviderV2 } from './ILendingPoolAddressesProviderV2.sol';
 import { ILendingPoolV2 } from './ILendingPoolV2.sol';
@@ -22,7 +22,7 @@ abstract contract FlashLoanReceiverBaseV2 is IFlashLoanReceiverV2 {
   ILendingPoolAddressesProviderV2 public immutable override ADDRESSES_PROVIDER;
   ILendingPoolV2 public immutable override LENDING_POOL;
 
-  constructor(address provider) public {
+  constructor(address provider) {
     ADDRESSES_PROVIDER = ILendingPoolAddressesProviderV2(provider);
     LENDING_POOL = ILendingPoolV2(ILendingPoolAddressesProviderV2(provider).getLendingPool());
   }

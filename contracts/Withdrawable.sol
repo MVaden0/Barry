@@ -1,8 +1,8 @@
-pragma solidity ^0.6.6;
+pragma solidity >=0.6.6 <0.9.0;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "./../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "./../node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "./../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 /**
     Ensures that any contract that inherits from this contract is able to
@@ -28,7 +28,7 @@ contract Withdrawable is Ownable {
         if (_assetAddress == ETHER) {
             address self = address(this); // workaround for a possible solidity bug
             assetBalance = self.balance;
-            msg.sender.transfer(assetBalance);
+            payable(msg.sender).transfer(assetBalance);
         } else {
             assetBalance = ERC20(_assetAddress).balanceOf(address(this));
             ERC20(_assetAddress).safeTransfer(msg.sender, assetBalance);

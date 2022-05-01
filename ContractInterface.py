@@ -4,8 +4,7 @@ import os
 import web3
 import solcx
 
-
-solcx.install_solc(version='0.6.6')
+solcx.install_solc('0.8.1')
 
 
 class ContractInterface:
@@ -25,7 +24,9 @@ class ContractInterface:
         # compile contract
         self.compiled_contract = solcx.compile_source(
             self.source_contract,
-            output_values=["abi", "bin"]
+            output_values=["abi", "bin"],
+            solc_version="0.8.1",
+            allow_paths=['contracts/', '@openzeppelin/']
         )
         self.contract_id, self.contract_interface = self.compiled_contract.popitem()
 
@@ -65,10 +66,9 @@ class ContractInterface:
 c = ContractInterface(
         os.environ.get("PROJECT_ID"), 
         os.environ.get("PRIVATE_KEY"), 
-        "contracts/v2/FlashloanV2.sol", 
+        "Demo.sol", 
         "kovan"
     )
 
 
-print(c.contract.functions.greet().call())
 print(c.contract_address)
